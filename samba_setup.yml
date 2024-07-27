@@ -1,0 +1,49 @@
+- name: Install and configure SAMBA
+  hosts: webservers
+  become: yes
+
+  vars:
+    samba_shares:
+      - name: public
+        path: /srv/samba/public
+        guest_ok: yes
+        writable: yes
+
+  tasks:
+    - name: Ensure SAMBA is installed
+      apt:
+        name: samba
+        state: present
+        update_cache: yes
+
+    - name: Ensure directories for shares exist
+      file:
+        path: '{{ item.path }}'
+        state: directory
+        mode: '0755'
+      with_items: '{{ samba_shares }}'
+
+    - name: Backup the original smb.conf
+      command: cp /etc/samba/smb.conf /etc/samba/smb.conf.bak
+      args:
+        creates: /etc/samba/smb.conf.bak
+
+    - name: Create a new smb.conf
+      template:
+        src: smb.conf.j2
+        dest: /etc/samba/smb.conf
+        owner: root
+        group: root
+        mode: '0644'
+
+    - name: Restart SAMBA services
+      systemd:
+        name: smbd
+        state: restarted
+        enabled: yes
+
+    - name: Restart nmbd services
+      systemd:
+        name: nmbd
+        state: restarted
+        enabled: yes" > samba_setup.yml

@@ -1,0 +1,2 @@
+0 1 * * 6 ansible-playbook -i /home/alex/hosts.ini /home/alex/lamp_setup.yml --ask-become-pass
+0 1 1 */6 * ansible-playbook -i /home/alex/hosts.ini /home/alex/samba_setup.yml --ask-become-pass" > crontab.txt

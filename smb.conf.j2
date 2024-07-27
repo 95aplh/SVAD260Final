@@ -1,0 +1,20 @@
+[global]
+server string = Samba Server
+workgroup = WORKGROUP
+netbios name = ubuntu
+security = user
+map to guest = Bad User
+dns proxy = no
+
+[public]
+path = /srv/samba/public
+browsable = yes
+guest ok = yes
+read only = no
+create mask = 0755
+
+[shared]
+path = /srv/samba/shared
+browsable = yes
+guest ok = no
+read only = no" > smb.conf.j2
